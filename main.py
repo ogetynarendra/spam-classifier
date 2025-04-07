@@ -9,7 +9,7 @@ vectorizer = joblib.load("vectorizer.joblib")
 
 app = FastAPI()
 
-# CORS config
+# CORS for GitHub Pages
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://ogetynarendra.github.io"],
@@ -18,7 +18,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# 📦 Define message schema
+# ✅ Accept JSON input using Pydantic
 class Message(BaseModel):
     message: str
 
