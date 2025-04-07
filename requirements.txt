@@ -13,3 +13,4 @@ uvicorn==0.29.0
 # Visualization (optional for training)
 matplotlib==3.7.1
 seaborn==0.12.2
+pydantic==1.10.14
