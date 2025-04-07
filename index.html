@@ -6,26 +6,38 @@
   <style>
     body {
       font-family: "Segoe UI", sans-serif;
-      background: linear-gradient(to right, #83a4d4, #b6fbff);
+      background: linear-gradient(135deg, #83a4d4, #b6fbff);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       padding: 20px;
+      margin: 0;
+      overflow-x: hidden;
     }
 
     .container {
-      background-color: #ffffff;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
       padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
       width: 100%;
       max-width: 600px;
       text-align: center;
+      transition: transform 0.2s ease-in-out;
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .container:hover {
+      transform: rotateX(5deg) rotateY(5deg);
     }
 
     h1 {
       margin-bottom: 20px;
+      color: #ffffff;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.3);
     }
 
     textarea {
@@ -33,35 +45,39 @@
       height: 100px;
       padding: 12px;
       font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
+      border: none;
+      border-radius: 10px;
+      outline: none;
       resize: none;
+      margin-bottom: 10px;
     }
 
     button {
-      margin-top: 15px;
       padding: 12px 25px;
       font-size: 16px;
       border: none;
-      background-color: #007bff;
-      color: white;
       border-radius: 8px;
+      background: #007bff;
+      color: white;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
     }
 
     button:hover {
-      background-color: #0056b3;
+      background: #0056b3;
+      transform: scale(1.05);
     }
 
     #result {
       margin-top: 20px;
       font-size: 20px;
       font-weight: bold;
+      color: #fff;
+      min-height: 30px;
     }
 
     .spam {
-      color: #d90429;
+      color: #ff3e3e;
     }
 
     .ham {
@@ -70,8 +86,8 @@
 
     .spinner {
       margin-top: 15px;
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #007bff;
+      border: 4px solid rgba(255,255,255,0.3);
+      border-top: 4px solid #ffffff;
       border-radius: 50%;
       width: 30px;
       height: 30px;
@@ -83,10 +99,33 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    .typing {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid white;
+      animation: typing 1.5s steps(40, end), blink-caret 0.75s step-end infinite;
+    }
+
+    @keyframes blink-caret {
+      0%, 100% { border-color: transparent; }
+      50% { border-color: white; }
+    }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="card">
     <h1>📬 Spam Classifier</h1>
     <textarea id="messageInput" placeholder="Enter a message..."></textarea><br>
     <button onclick="classifyMessage()">Check Message</button>
@@ -101,12 +140,14 @@
       const loader = document.getElementById("loading");
 
       resultDiv.textContent = "";
+      resultDiv.className = "";
+      loader.style.display = "inline-block";
+
       if (!message.trim()) {
+        loader.style.display = "none";
         resultDiv.textContent = "❌ Please enter a message.";
         return;
       }
-
-      loader.style.display = "inline-block";
 
       try {
         const response = await fetch("https://web-production-ec1e.up.railway.app/predict/", {
@@ -121,7 +162,8 @@
         loader.style.display = "none";
 
         const predictionClass = data.prediction === "Spam" ? "spam" : "ham";
-        resultDiv.innerHTML = `Prediction: <span class="${predictionClass}">${data.prediction}</span>`;
+        resultDiv.className = `typing ${predictionClass}`;
+        resultDiv.textContent = `Prediction: ${data.prediction}`;
       } catch (error) {
         loader.style.display = "none";
         resultDiv.textContent = "⚠️ Error: Could not reach the server.";
