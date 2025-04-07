@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
 import joblib
 
 # Load trained model and vectorizer
@@ -8,12 +7,13 @@ vectorizer = joblib.load("vectorizer.joblib")
 
 app = FastAPI()
 
-class Message(BaseModel):
-    text: str
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to Spam Classifier API!"}
 
-@app.post("/predict")
-def predict(msg: Message):
-    X = vectorizer.transform([msg.text])
-    prediction = model.predict(X)[0]
-    label = "spam" if prediction == 1 else "ham"
-    return {"prediction": label}
+@app.post("/predict/")
+def predict_spam(message: str):
+    message_vectorized = vectorizer.transform([message])
+    prediction = model.predict(message_vectorized)[0]
+    result = "Spam" if prediction == 1 else "Ham"
+    return {"message": message, "prediction": result}
