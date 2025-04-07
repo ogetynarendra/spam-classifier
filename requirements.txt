@@ -1,2 +1,15 @@
 # API
 
+# Core ML and data processing
+pandas==1.5.3
+numpy==1.23.5
+scikit-learn==1.2.2
+joblib==1.2.0
+
+# FastAPI and server
+fastapi==0.110.0
+uvicorn==0.29.0
+
+# Visualization (optional for training)
+matplotlib==3.7.1
+seaborn==0.12.2
