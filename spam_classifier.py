@@ -38,4 +38,10 @@ plt.title("Confusion Matrix")
 plt.xlabel("Predicted")
 plt.ylabel("Actual")
 plt.show()
+import joblib
+
+# Save model and vectorizer
+joblib.dump(model, "spam_model.joblib")
+joblib.dump(vectorizer, "vectorizer.joblib")
+
 
