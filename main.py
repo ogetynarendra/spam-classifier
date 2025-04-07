@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
 import joblib
 
 # Load model and vectorizer
@@ -8,22 +9,26 @@ vectorizer = joblib.load("vectorizer.joblib")
 
 app = FastAPI()
 
-# ✅ Add this middleware
+# CORS config
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://ogetynarendra.github.io"],  # Only your frontend
+    allow_origins=["https://ogetynarendra.github.io"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# 📦 Define message schema
+class Message(BaseModel):
+    message: str
 
 @app.get("/")
 def read_root():
     return {"message": "Welcome to Spam Classifier API!"}
 
 @app.post("/predict/")
-def predict_spam(message: str):
-    message_vectorized = vectorizer.transform([message])
+def predict_spam(data: Message):
+    message_vectorized = vectorizer.transform([data.message])
     prediction = model.predict(message_vectorized)[0]
     result = "Spam" if prediction == 1 else "Ham"
-    return {"message": message, "prediction": result}
+    return {"message": data.message, "prediction": result}
