@@ -4,11 +4,11 @@ A beginner-friendly machine learning project that classifies text messages as **
 
 ## 🚀 Project Highlights
 
-- ✅ 99.2% accuracy on test data
-- 💬 Trained on the SMS Spam Collection Dataset
-- 🧠 Used `CountVectorizer` to convert text to numeric features
-- 🤖 Trained using `Multinomial Naive Bayes` (a classic for spam detection)
-- 📊 Evaluated with precision, recall, F1-score, and confusion matrix
+- 99.2% accuracy on test data
+-  Trained on the SMS Spam Collection Dataset
+-  Used `CountVectorizer` to convert text to numeric features
+-  Trained using `Multinomial Naive Bayes` (a classic for spam detection)
+-  Evaluated with precision, recall, F1-score, and confusion matrix
 
 ## 🔧 Tech Stack
 
